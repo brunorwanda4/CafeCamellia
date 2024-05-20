@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             VALUES ('$nationalId', '$firstName', '$lastName', '$gender', '$dob', $postId, '$examDate', '$phoneNumber', $marks)";
 
     if ($conn->query($sql) === TRUE) {
-        header('Location: candidatesTable.php');
+        header('Location: index.php');
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }

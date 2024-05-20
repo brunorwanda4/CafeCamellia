@@ -1,3 +1,32 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header('Location: login.php');
+    exit;
+}
+
+require_once 'config/db.php';
+
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Form data
+    $postName = $_POST['postName'];
+
+    // Insert data into database
+    $sql = "INSERT INTO Post (PostName) VALUES ('$postName')";
+
+    if ($conn->query($sql) === TRUE) {
+        header("Location: index.php");
+        exit; // Ensure the script stops executing after redirect
+    } else {
+        $error = "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -63,6 +92,12 @@
                                         <p class="text-center small">Enter post name</p>
                                     </div>
 
+                                    <?php
+                                    if (isset($error)) {
+                                        echo "<div class='alert alert-danger'>$error</div>";
+                                    }
+                                    ?>
+
                                     <form class="row g-3 needs-validation" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" novalidate>
 
                                         <div class="col-12">
@@ -87,26 +122,6 @@
 
         </div>
     </main>
-
-    <?php
-require_once 'config/db.php';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Form data
-    $postName = $_POST['postName'];
-
-    // Insert data into database
-    $insert_sql = "INSERT INTO Post (PostName) VALUES ($postName)";
-    if (mysqli_query($conn, $insert_sql)) {
-        header("Location: index.php");
-    } else {
-        echo "<p>Error: " . mysqli_error($conn) . "</p>";
-    }
-    $conn->close();
-}
-?>
-
-
 </body>
 
 </html>

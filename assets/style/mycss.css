@@ -17,7 +17,27 @@ body {
     justify-content: space-between;
 }
 
+.my_button{
+    display: flex;
+    justify-content: space-between;
+}
+/* .logout{
+    position: absolute;
+    right: 4px;
+
+} */
+
+.my_button{
+ display: flex;
+ justify-content: space-between;
+ width: 100%;
+ gap: 10px;
+}
+
 .header nav {
     margin-top: 10px;
 }
 
+.logo-icon{
+    color: orange;
+}

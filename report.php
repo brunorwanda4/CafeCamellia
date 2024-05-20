@@ -9,7 +9,9 @@ if (!isset($_SESSION['username'])) {
 require_once 'config/db.php';
 
 // Retrieve all candidates' results
-$sql = "SELECT * FROM CandidatesResult ORDER BY Marks DESC";
+$sql = "SELECT CandidatesResult.*, Post.PostName 
+FROM CandidatesResult 
+LEFT JOIN Post ON CandidatesResult.PostId = Post.PostId ORDER BY Marks DESC";
 $result = $conn->query($sql);
 $candidatesResults = [];
 if ($result !== false && $result->num_rows > 0) {
@@ -97,7 +99,7 @@ if ($result !== false && $result->num_rows > 0) {
                                                     <td><?php echo $result['FirstName'] . ' ' . $result['LastName']; ?></td>
                                                     <td><?php echo $result['Gender']; ?></td>
                                                     <td><?php echo $result['DateOfBirth']; ?></td>
-                                                    <td><?php echo $result['PostId']; ?></td>
+                                                    <td><?php echo $result['PostName']; ?></td>
                                                     <td><?php echo $result['ExamDate']; ?></td>
                                                     <td><?php echo $result['PhoneNumber']; ?></td>
                                                     <td><?php echo $result['Marks']; ?></td>

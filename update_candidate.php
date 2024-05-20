@@ -49,13 +49,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "UPDATE CandidatesResult 
             SET FirstName=?, LastName=?, Gender=?, DateOfBirth=?, 
-                PostId=?, ExamDate=?, PhoneNumber=?, Marks=? 
+                PostId=?, ExamDate=?, PhoneNumber=?, Marks=?
             WHERE CandidateNationalId=?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssssissis", $firstName, $lastName, $gender, $dob, $postId, $examDate, $phoneNumber, $marks, $nationalId);
 
     if ($stmt->execute() === TRUE) {
-        header('Location: candidatesTable.php');
+        header('Location: index.php');
     } else {
         echo "Error updating record: " . $conn->error;
     }
