@@ -1,9 +1,44 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header('Location: login.php');
+    exit;
+}
+
+require_once 'config/db.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $postId = $_POST['postId'];
+    $postName = $_POST['postName'];
+
+    $sql = "UPDATE Post SET PostName='$postName' WHERE PostId=$postId";
+    if ($conn->query($sql) === TRUE) {
+        header('Location: index.php');
+    } else {
+        echo "Error updating post: " . $conn->error;
+    }
+
+    $conn->close();
+} else {
+    $postId = $_GET['id'];
+    $sql = "SELECT * FROM Post WHERE PostId=$postId";
+    $result = $conn->query($sql);
+    if ($result !== false && $result->num_rows > 0) {
+        $post = $result->fetch_assoc();
+    } else {
+        echo "Post not found";
+        exit;
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <?php include './includes/head.php'; ?>
-    <title>Add Post</title>
+    <title>Edit Post</title>
 
     <style>
         body {
@@ -44,69 +79,39 @@
     </style>
 </head>
 
+
 <body>
-<?php include './includes/navbar.php'; ?>
+    <?php include './includes/navbar.php'; ?>
     <main>
         <div class="container">
-
             <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-8 col-md-10 d-flex flex-column align-items-center justify-content-center">
-
                             <div class="card mb-3">
-
                                 <div class="card-body">
-
                                     <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Add Post</h5>
-                                        <p class="text-center small">Enter post name</p>
+                                        <h5 class="card-title text-center pb-0 fs-4">Edit Post</h5>
                                     </div>
-
                                     <form class="row g-3 needs-validation" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" novalidate>
-
+                                        <input type="hidden" name="postId" value="<?php echo $postId; ?>">
                                         <div class="col-12">
                                             <label for="postName" class="form-label">Post Name</label>
-                                            <input type="text" name="postName" class="form-control" id="postName" required>
+                                            <input type="text" name="postName" class="form-control" id="postName" value="<?php echo $post['PostName']; ?>" required>
                                             <div class="invalid-feedback">Please enter post name.</div>
                                         </div>
-
                                         <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="submit">Add Post</button>
+                                            <button class="btn btn-primary w-100" type="submit">Save Changes</button>
                                         </div>
                                     </form>
-
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </section>
-
         </div>
     </main>
-
-    <?php
-require_once 'config/db.php';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Form data
-    $postName = $_POST['postName'];
-
-    // Insert data into database
-    $insert_sql = "INSERT INTO Post (PostName) VALUES ($postName)";
-    if (mysqli_query($conn, $insert_sql)) {
-        header("Location: index.php");
-    } else {
-        echo "<p>Error: " . mysqli_error($conn) . "</p>";
-    }
-    $conn->close();
-}
-?>
-
-
 </body>
 
 </html>
